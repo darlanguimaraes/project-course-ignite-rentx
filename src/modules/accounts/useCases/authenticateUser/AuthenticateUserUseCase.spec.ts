@@ -1,3 +1,6 @@
+import { UsersTokenRepositoryInMemory } from "@modules/accounts/repositories/in-memory/UsersTokenRepositoryInMemory";
+import { DayjsDateProvider } from "@shared/container/providers/DateProvider/Implementations/DaysDateProvider";
+
 import { AppError } from "../../../../shared/errors/AppError";
 import { ICreateUserDTO } from "../../dtos/ICreateUserDTO";
 import { UsersRepositoryInMemory } from "../../repositories/in-memory/UsersRepositoryInMemory";
@@ -7,12 +10,18 @@ import { AuthenticateUserUseCase } from "./AuthenticateUserUseCase";
 let authenticateUserUseCase: AuthenticateUserUseCase;
 let userRepositoryInMemory: UsersRepositoryInMemory;
 let createUserUseCase: CreateUserUserCase;
+let userTokenRepositoryInMemory: UsersTokenRepositoryInMemory;
+let dateProvider: DayjsDateProvider;
 
 describe("Authenticate User", () => {
   beforeEach(() => {
     userRepositoryInMemory = new UsersRepositoryInMemory();
+    userTokenRepositoryInMemory = new UsersTokenRepositoryInMemory();
+    dateProvider = new DayjsDateProvider();
     authenticateUserUseCase = new AuthenticateUserUseCase(
-      userRepositoryInMemory
+      userRepositoryInMemory,
+      userTokenRepositoryInMemory,
+      dateProvider
     );
     createUserUseCase = new CreateUserUserCase(userRepositoryInMemory);
   });
@@ -41,7 +50,7 @@ describe("Authenticate User", () => {
         email: "false@email.com",
         password: "4321",
       })
-    ).rejects.toEqual(new AppError("Email or password incorrect!"));
+    ).rejects.toEqual(new AppError("Email or password incorrect"));
   });
 
   // it("should not be able to authenticate with incorrect passowrd", () => {

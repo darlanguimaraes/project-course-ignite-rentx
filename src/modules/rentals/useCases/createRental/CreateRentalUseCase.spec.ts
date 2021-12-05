@@ -60,9 +60,7 @@ describe("Create Rental", () => {
         car_id: "22222",
         expected_return_date: dayAdd24Hours,
       })
-    ).rejects.toEqual(
-      new AppError("There's a rental open in progress for user!")
-    );
+    ).rejects.toEqual(new AppError("There's a rental in progress for user!"));
   });
 
   it("Should not be able to create a new rental if there ais another open to the same car", async () => {
@@ -77,7 +75,7 @@ describe("Create Rental", () => {
         car_id: "54321",
         expected_return_date: dayAdd24Hours,
       })
-    ).rejects.toEqual(new AppError("Car is unavailable!"));
+    ).rejects.toEqual(new AppError("Car is unavailable"));
   });
 
   it("Should not be able to create a new rental with invalid return time", async () => {
